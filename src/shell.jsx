@@ -101,11 +101,23 @@ import ReactDOM from 'react-dom/client';
         <NavRow
           icon={<I.sparkles size={22} />} iconColor="#E50808" label="Guide Me" color="#B1040E"
           onClick={onGuideMe}
-          badge={<span style={{
-            width: 8, height: 8, borderRadius: 8, background: "#E50808",
-            boxShadow: guidePulse ? "0 0 0 0 rgba(229,8,8,0.6)" : "none",
-            animation: guidePulse ? "rexiPulse 1.6s infinite" : "none",
-          }} />}
+          badge={
+            <span
+              onClick={(e) => { e.stopPropagation(); onGuideMe(); }}
+              style={{
+                display: "inline-flex", alignItems: "center",
+                width: 36, height: 20, borderRadius: 20, flexShrink: 0,
+                background: guidePulse ? "#B1040E" : "#C0C0BF",
+                transition: "background 0.2s", cursor: "pointer", padding: "0 3px",
+                justifyContent: guidePulse ? "flex-end" : "flex-start",
+              }}
+            >
+              <span style={{
+                width: 14, height: 14, borderRadius: "50%", background: "#fff",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
+              }} />
+            </span>
+          }
         />
 
         {/* Study selector */}

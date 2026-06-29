@@ -61,7 +61,7 @@ const NOTIFS = [
 
   function OverviewPage({ onGuide, onActivate, onEditTeam }) {
     return (
-      <div style={{ height: "100%", overflowY: "auto", background: "#F2F4F6" }}>
+      <div style={{ height: "100%", overflowY: "auto", background: "#fff" }}>
 
         {/* ── Main content ─────────────────────────────────────────── */}
         <div style={{ padding: "32px 40px 56px" }}>

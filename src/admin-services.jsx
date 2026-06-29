@@ -177,7 +177,7 @@ import React from 'react';
 
   function ResearchAdminServicesPage({ onGuide, onBudget }) {
     return (
-      <div style={{ height: "100%", overflowY: "auto", background: "#F2F4F6" }}>
+      <div style={{ height: "100%", overflowY: "auto", background: "#F8F9FA" }}>
         <div style={{ padding: "28px 40px 56px" }}>
           <PageTitleRow title="Research Administrative Services" />
 
@@ -377,7 +377,7 @@ import React from 'react';
     const [commentsOpen, setCommentsOpen] = React.useState(false);
 
     return (
-      <div style={{ height: "100%", overflowY: "auto", background: "#F2F4F6" }}>
+      <div style={{ height: "100%", overflowY: "auto", background: "#F8F9FA" }}>
         <div style={{ padding: "28px 40px 56px" }}>
           <PageTitleRow title="Research Administrative Services - Budget" />
 
