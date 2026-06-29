@@ -9,6 +9,8 @@ import ReactDOM from 'react-dom/client';
   const { OverviewPage, DocumentsPage } = window.RExPages;
   const { TasksPage } = window.RExTasks;
   const { PortfolioPage } = window.RExPortfolio;
+  const { ResearchAdminServicesPage, ResearchAdminBudgetPage } = window.RExAdminServices;
+  const { LandingPage } = window.RExLanding;
   const { isAnswered } = window.RExFields;
   const { STUDY, STEPS, SAMPLE_ANSWERS, QUESTION_INDEX, DOCUMENTS, EXISTING_STUDY } = window.RExData;
 
@@ -106,7 +108,8 @@ import ReactDOM from 'react-dom/client';
         onResume={resumeStudy}
         onSample={() => { applyAI(SAMPLE_ANSWERS); flashToast("Sample study loaded"); setScreen("review"); }} />;
     } else if (screen === "home") {
-      body = <SimplePage title="Home" body="Your dashboard of active studies, alerts, and shortcuts lives here. For this prototype, head to Study Overview to walk the new-study intake flow, or tap Guide Me to have RExI fill it in for you." />;
+      // Landing page renders full-screen (handled below, body stays null)
+      body = null;
     } else if (screen === "portfolio") {
       body = <PortfolioPage onNewStudy={() => setScreen(STEPS[0].id)} />;
     } else if (screen === "overview") {
@@ -115,6 +118,10 @@ import ReactDOM from 'react-dom/client';
       body = <DocumentsPage />;
     } else if (screen === "tasks") {
       body = <TasksPage onGuide={openGuide} />;
+    } else if (screen === "adminServices") {
+      body = <ResearchAdminServicesPage onGuide={openGuide} onBudget={() => navigate("adminBudget")} />;
+    } else if (screen === "adminBudget") {
+      body = <ResearchAdminBudgetPage onGuide={openGuide} />;
     } else if (stepIndex !== -1) {
       body = <StepScreen step={STEPS[stepIndex]} answers={answers} setAnswer={setAnswer} aiFilled={aiFilled}
         onBack={goBack} onContinue={goNext} onSaveExit={() => { flashToast("Progress saved — nothing is committed yet"); }}
@@ -131,10 +138,25 @@ import ReactDOM from 'react-dom/client';
         onRestart={() => { setAnswers({}); setSubmitted({}); setSubmittedDocs(new Set()); setNotified(new Set()); setAiFilled(new Set()); setScreen("welcome"); }} />;
     }
 
+    if (screen === "home" && !guideAgentOpen) {
+      return (
+        <LandingPage
+          onPortfolio={() => setScreen("portfolio")}
+          onGuide={() => { setGuideReturnScreen("overview"); setGuideAgentOpen(true); }}
+        />
+      );
+    }
+
     return (
       <div style={{ display: "flex", height: "100vh", width: "100vw", overflow: "hidden", background: "#fff" }}>
-        <Sidebar steps={STEPS} current={screen} completed={completed} study={STUDY}
-          onNavigate={navigate} onGuideMe={openGuide} guidePulse={t.nudge && !guideOpen} />
+        {/* Sidebar slides out when Guide Me is full-screen */}
+        <div style={{
+          width: guideAgentOpen ? 0 : 320, flexShrink: 0,
+          overflow: "hidden", transition: "width 0.3s ease",
+        }}>
+          <Sidebar steps={STEPS} current={screen} completed={completed} study={STUDY}
+            onNavigate={navigate} onGuideMe={openGuide} guidePulse={t.nudge && !guideOpen} />
+        </div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
           <Header study={STUDY} progressOn={progressOn} onToggleProgress={() => setProgressOn((v) => !v)} />
           <main style={{ flex: 1, minHeight: 0, background: "#fff", position: "relative" }}>{body}</main>

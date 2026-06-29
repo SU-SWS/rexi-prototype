@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom/client';
 // guideme-agent.jsx — Full-screen "Guide Me" conversational agent screen
 (function () {
   const SERIF = "'Source Serif 4', Georgia, serif";
-  const SANS = "'Source Sans Pro', sans-serif";
-  const RED = "#8C1515";
+  const SANS = "'Source Sans 3', sans-serif";
+  const RED = "#B1040E";
   const BLUE = "#006CB8";
-  const BG = "#faf9f5";
+  const BG = "#ffffff";
 
   // ── Shared micro-components ──────────────────────────────────────────
 
@@ -16,15 +16,14 @@ import ReactDOM from 'react-dom/client';
         onClick={onClick}
         disabled={disabled}
         style={{
-          width: 40, height: 40, borderRadius: "50%",
+          width: 48, height: 48, borderRadius: "50%",
           background: disabled ? "#ccc" : RED,
           border: "none", cursor: disabled ? "default" : "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",
           flexShrink: 0, transition: "background 0.15s",
         }}
       >
-        {/* Paper-plane icon */}
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="22" y1="2" x2="11" y2="13" />
           <polygon points="22 2 15 22 11 13 2 9 22 2" />
         </svg>
@@ -42,10 +41,10 @@ import ReactDOM from 'react-dom/client';
           onKeyDown={(e) => { if (e.key === "Enter" && value.trim()) onSubmit(); }}
           placeholder={placeholder}
           style={{
-            flex: 1, height: 42, borderRadius: 10,
-            border: "1px solid #D0CFC8", padding: "0 14px",
-            fontFamily: SANS, fontSize: 16, background: "#fff",
-            outline: "none", color: "#0A0A0A",
+            flex: 1, height: 52, borderRadius: 10,
+            border: "1px solid #C0C0BF", padding: "0 16px",
+            fontFamily: SANS, fontSize: 20, background: "#fff",
+            outline: "none", color: "#2E2D29",
           }}
         />
         <SendButton onClick={onSubmit} disabled={!value.trim()} />
@@ -58,8 +57,8 @@ import ReactDOM from 'react-dom/client';
       <button
         onClick={onClick}
         style={{
-          background: BLUE, color: "#fff", border: "none", borderRadius: 10,
-          padding: "12px 28px", fontFamily: SANS, fontSize: 16,
+          background: BLUE, color: "#fff", border: "none", borderRadius: 8,
+          padding: "14px 32px", fontFamily: SANS, fontSize: 20,
           cursor: "pointer", width: fullWidth ? "100%" : undefined,
           fontWeight: 600,
         }}
@@ -74,9 +73,9 @@ import ReactDOM from 'react-dom/client';
       <button
         onClick={onClick}
         style={{
-          background: "#fff", color: "#0A0A0A",
-          border: "1.5px solid #D0CFC8", borderRadius: 10,
-          padding: "12px 28px", fontFamily: SANS, fontSize: 16,
+          background: "#fff", color: "#2E2D29",
+          border: "1.5px solid #C0C0BF", borderRadius: 8,
+          padding: "14px 32px", fontFamily: SANS, fontSize: 20,
           cursor: "pointer", fontWeight: 500,
         }}
       >
@@ -92,8 +91,8 @@ import ReactDOM from 'react-dom/client';
         style={{
           position: "absolute", top: 24, right: 24,
           border: "1px solid #C0C0BF", borderRadius: 20,
-          background: "#fff", padding: "6px 14px",
-          fontFamily: SANS, fontSize: 13, color: "#555",
+          background: "#fff", padding: "8px 18px",
+          fontFamily: SANS, fontSize: 16, color: "#6D6C69",
           cursor: "pointer", zIndex: 10,
         }}
       >
@@ -105,9 +104,9 @@ import ReactDOM from 'react-dom/client';
   function Mascot() {
     return (
       <img
-        src="/assets/rexi-mascot.png"
+        src="assets/rexi-mascot.png"
         alt="RExI mascot"
-        style={{ width: 110, height: "auto", flexShrink: 0, marginTop: -10 }}
+        style={{ width: 130, height: "auto", flexShrink: 0, marginTop: -10 }}
       />
     );
   }
@@ -115,8 +114,8 @@ import ReactDOM from 'react-dom/client';
   function AskAnything({ onSend }) {
     const [val, setVal] = React.useState("");
     return (
-      <div style={{ marginTop: 28 }}>
-        <div style={{ fontFamily: SANS, fontSize: 15, color: "#555", marginBottom: 8 }}>
+      <div style={{ marginTop: 32 }}>
+        <div style={{ fontFamily: SANS, fontSize: 19, color: "#6D6C69", marginBottom: 10 }}>
           Have a different question? Ask me anything.
         </div>
         <TextInput
@@ -135,13 +134,13 @@ import ReactDOM from 'react-dom/client';
     const [role, setRole] = React.useState("");
     return (
       <div>
-        <h1 style={{ fontFamily: SERIF, fontSize: 32, color: "#0A0A0A", margin: "0 0 18px 0", fontWeight: 700, lineHeight: 1.2 }}>
+        <h1 style={{ fontFamily: SERIF, fontSize: 37, color: "#2E2D29", margin: "0 0 22px 0", fontWeight: 400, lineHeight: 1.4, letterSpacing: 1 }}>
           Welcome to Guide Me
         </h1>
-        <p style={{ fontFamily: SANS, fontSize: 17, color: "#2E2D29", margin: "0 0 28px 0", lineHeight: 1.6 }}>
+        <p style={{ fontFamily: SANS, fontSize: 21, color: "#2E2D29", margin: "0 0 32px 0", lineHeight: 1.4 }}>
           My name is RExI. You can ask me to do just about anything to get your study ready for activation. I'm here to make sure your studies are up-to-date and on track.
         </p>
-        <div style={{ fontFamily: SANS, fontSize: 15, color: "#2E2D29", marginBottom: 10, fontWeight: 600 }}>
+        <div style={{ fontFamily: SANS, fontSize: 19, color: "#2E2D29", marginBottom: 12, fontWeight: 600 }}>
           First thing I need to know, what's your role?
         </div>
         <TextInput
@@ -159,19 +158,17 @@ import ReactDOM from 'react-dom/client';
   function Step2({ roleInput, onNext }) {
     const [pi, setPi] = React.useState("");
 
-    // Parse first name: "Todd, Coordinator" → "Todd"; otherwise use as-is
     const firstName = roleInput.includes(",")
       ? roleInput.split(",")[0].trim()
       : roleInput.trim().split(" ")[0];
 
-    // Parse role: "Todd, Coordinator" → "Coordinator"
     const role = roleInput.includes(",")
       ? roleInput.split(",").slice(1).join(",").trim()
       : roleInput.trim();
 
     return (
       <div>
-        <h1 style={{ fontFamily: SERIF, fontSize: 32, color: "#0A0A0A", margin: "0 0 24px 0", fontWeight: 700, lineHeight: 1.25 }}>
+        <h1 style={{ fontFamily: SERIF, fontSize: 37, color: "#2E2D29", margin: "0 0 28px 0", fontWeight: 400, lineHeight: 1.4, letterSpacing: 1 }}>
           Hello {firstName}, nice to meet you! If you're the {role}, who is the Principal Investigator?
         </h1>
         <TextInput
@@ -188,29 +185,58 @@ import ReactDOM from 'react-dom/client';
 
   function Step3({ onNext }) {
     const fileRef = React.useRef(null);
+    const [dragging, setDragging] = React.useState(false);
+
+    const handleDrop = (e) => {
+      e.preventDefault();
+      setDragging(false);
+      if (e.dataTransfer.files.length) onNext("yes");
+    };
 
     return (
       <div>
-        <h1 style={{ fontFamily: SERIF, fontSize: 32, color: "#0A0A0A", margin: "0 0 28px 0", fontWeight: 700, lineHeight: 1.2 }}>
+        <h1 style={{ fontFamily: SERIF, fontSize: 37, color: "#2E2D29", margin: "0 0 14px 0", fontWeight: 400, lineHeight: 1.4, letterSpacing: 1 }}>
           Do you have a protocol document started?
         </h1>
-        <div style={{ display: "flex", gap: 14, marginBottom: 18, flexWrap: "wrap" }}>
-          <OutlineButton onClick={() => onNext("no")}>No, not yet</OutlineButton>
-          <BlueButton onClick={() => onNext("yes")}>Yes, I do</BlueButton>
+        <p style={{ fontFamily: SANS, fontSize: 19, color: "#6D6C69", margin: "0 0 24px 0" }}>
+          Upload it and I'll extract the study details for you automatically.
+        </p>
+
+        <input type="file" ref={fileRef} style={{ display: "none" }} onChange={() => onNext("yes")} />
+        <div
+          onClick={() => fileRef.current && fileRef.current.click()}
+          onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={handleDrop}
+          style={{
+            border: `2px dashed ${dragging ? BLUE : "#C0BFB8"}`,
+            borderRadius: 12, padding: "36px 28px",
+            display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
+            cursor: "pointer", background: dragging ? "#EEF5FC" : "#FAFAF8",
+            transition: "border-color 0.15s, background 0.15s",
+            marginBottom: 24,
+          }}
+        >
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke={BLUE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          <div style={{ fontFamily: SANS, fontSize: 20, fontWeight: 600, color: BLUE }}>
+            Upload protocol document
+          </div>
+          <div style={{ fontFamily: SANS, fontSize: 16, color: "#ABABA9" }}>
+            PDF, Word, or text file — drag & drop or click to browse
+          </div>
         </div>
-        <div>
-          <input type="file" ref={fileRef} style={{ display: "none" }} onChange={() => onNext("yes")} />
-          <button
-            onClick={() => fileRef.current && fileRef.current.click()}
-            style={{
-              background: "none", border: "none", cursor: "pointer",
-              fontFamily: SANS, fontSize: 15, color: BLUE,
-              textDecoration: "underline", padding: 0,
-            }}
-          >
-            Select document to upload ↑
-          </button>
+
+        <div style={{ fontFamily: SANS, fontSize: 18, color: "#6D6C69", textAlign: "center", marginBottom: 20 }}>— or —</div>
+
+        <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+          <OutlineButton onClick={() => onNext("no")}>No protocol yet, skip</OutlineButton>
+          <BlueButton onClick={() => onNext("yes")}>I'll add it later</BlueButton>
         </div>
+
         <AskAnything onSend={() => onNext("no")} />
       </div>
     );
@@ -231,56 +257,66 @@ import ReactDOM from 'react-dom/client';
   function Step4({ piName, onComplete }) {
     const [correction, setCorrection] = React.useState("");
 
-    const fields = FIELD_ROWS.map((f) =>
-      f.key === "_pi" ? { ...f, value: piName } : f
-    );
+    const initial = FIELD_ROWS.reduce((acc, f) => {
+      acc[f.label] = f.key === "_pi" ? piName : f.value;
+      return acc;
+    }, {});
+    const [values, setValues] = React.useState(initial);
 
     const handleDone = () => {
-      const answers = {
-        _guideme_pi: piName,
-        sponsorName: "Merck Sharp & Dohme LLC",
-        phase: "Phase III",
-        enrollment: "120",
-        irb: "IRB-2026-0142",
-        nct: "NCT04875013",
-      };
-      onComplete(answers);
+      onComplete({
+        _guideme_pi: values["Name of Principal Investigator"],
+        sponsorName: values["Name of Sponsor"],
+        phase: values["Study Phase"],
+        enrollment: values["Enrollment Target"].replace(/\D+$/, "").trim(),
+        irb: values["IRB Protocol #"],
+        nct: values["NCT Number"],
+      });
     };
 
     return (
       <div>
-        <h1 style={{ fontFamily: SERIF, fontSize: 32, color: "#0A0A0A", margin: "0 0 10px 0", fontWeight: 700, lineHeight: 1.2 }}>
+        <h1 style={{ fontFamily: SERIF, fontSize: 37, color: "#2E2D29", margin: "0 0 12px 0", fontWeight: 400, lineHeight: 1.4, letterSpacing: 1 }}>
           Great start! I found 13 study details that will pre-populate your study in RExI. Does this look right?
         </h1>
-        <p style={{ fontFamily: SANS, fontSize: 15, color: "#555", margin: "0 0 20px 0" }}>
-          Not right? Just type your corrections below...
+        <p style={{ fontFamily: SANS, fontSize: 19, color: "#6D6C69", margin: "0 0 24px 0" }}>
+          Edit any field below before confirming.
         </p>
 
-        {/* Fields card */}
         <div style={{
-          background: "#fff", border: "1px solid #E0DFD9", borderRadius: 10,
-          padding: 20, marginBottom: 20,
+          background: "#fff", border: "1px solid #EAEAEA", borderRadius: 10,
+          boxShadow: "0 3px 6px rgba(0,0,0,0.10)",
+          padding: 22, marginBottom: 22,
         }}>
-          {fields.map((f, i) => (
+          {FIELD_ROWS.map((f, i) => (
             <div key={i} style={{
-              padding: "10px 0",
-              borderBottom: i < fields.length - 1 ? "1px solid #F0EFEA" : "none",
+              padding: "12px 0",
+              borderBottom: i < FIELD_ROWS.length - 1 ? "1px solid #F0F0F0" : "none",
             }}>
-              <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 700, color: "#0A0A0A" }}>
+              <div style={{ fontFamily: SANS, fontSize: 16, fontWeight: 600, color: "#2E2D29", marginBottom: 5 }}>
                 {f.label}
               </div>
-              <div style={{ fontFamily: SANS, fontSize: 15, color: "#666", marginTop: 2 }}>
-                {f.value}
-              </div>
+              <input
+                type="text"
+                value={values[f.label] || ""}
+                onChange={(e) => setValues((v) => ({ ...v, [f.label]: e.target.value }))}
+                style={{
+                  width: "100%", boxSizing: "border-box",
+                  height: 44, borderRadius: 7, border: "1px solid #C0C0BF",
+                  padding: "0 14px", fontFamily: SANS, fontSize: 19,
+                  color: "#2E2D29", background: "#FAFAF8", outline: "none",
+                }}
+                onFocus={(e) => e.target.style.borderColor = "#006CB8"}
+                onBlur={(e) => e.target.style.borderColor = "#C0C0BF"}
+              />
             </div>
           ))}
         </div>
 
         <BlueButton onClick={handleDone} fullWidth>Done reviewing</BlueButton>
 
-        {/* Corrections input */}
-        <div style={{ marginTop: 28 }}>
-          <div style={{ fontFamily: SANS, fontSize: 15, color: "#555", marginBottom: 8 }}>
+        <div style={{ marginTop: 32 }}>
+          <div style={{ fontFamily: SANS, fontSize: 19, color: "#6D6C69", marginBottom: 10 }}>
             Have a different question? Ask me anything.
           </div>
           <TextInput
@@ -307,27 +343,18 @@ import ReactDOM from 'react-dom/client';
         width: "100%", height: "100%",
         background: BG,
         overflowY: "auto",
-        padding: "60px 24px 60px 24px",
+        // Exit button is ~48px tall at top:24, so bottom ≈ 72px. Add 80px gap → content starts at ~152px.
+        padding: "152px 24px 60px 24px",
         boxSizing: "border-box",
       }}>
         <ExitButton onExit={onExit} />
 
-        {/* Centered content + mascot */}
-        <div style={{
-          maxWidth: 680,
-          margin: "0 auto",
-          position: "relative",
-        }}>
-          {/* Mascot — floats top-right */}
-          <div style={{
-            position: "absolute", top: 0, right: 0,
-            pointerEvents: "none",
-          }}>
+        <div style={{ maxWidth: 680, margin: "0 auto", position: "relative" }}>
+          <div style={{ position: "absolute", top: 0, right: 0, pointerEvents: "none" }}>
             <Mascot />
           </div>
 
-          {/* Step content with right margin so text doesn't go under mascot */}
-          <div style={{ paddingRight: 130 }}>
+          <div style={{ paddingRight: 150 }}>
             {step === 1 && (
               <Step1 onNext={(r) => { setRoleInput(r); setStep(2); }} />
             )}
