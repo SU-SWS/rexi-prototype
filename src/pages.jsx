@@ -71,30 +71,28 @@ const NOTIFS = [
             You’ve finished exploration
           </h2>
 
-          {/* Mascot + CTA */}
-          <div style={{ display: "flex", alignItems: "center", gap: 32, marginBottom: 32 }}>
-            <img src="assets/rexi-mascot.png" alt="RExI" style={{ width: 130, height: "auto", flexShrink: 0 }} />
-            <div>
-              <p style={{ fontFamily: FONT, fontSize: 17, color: "#2E2D29", lineHeight: 1.65, margin: "0 0 20px", maxWidth: 500 }}>
-                I am here to guide you through the process. Want to continue on your own? Begin study activation to set up your tasks and I’ll manage your study behind the scenes.
-              </p>
-              <div style={{ display: "flex", gap: 14 }}>
-                <button onClick={onGuide} style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  fontFamily: FONT, fontSize: 16, fontWeight: 700,
-                  color: "#B1040E", background: "#fff", border: "2px solid #B1040E",
-                  borderRadius: 8, padding: "11px 22px", cursor: "pointer",
-                }}>
-                  <I.sparkles size={18} /> Guide Me
-                </button>
-                <button onClick={onActivate} style={{
-                  fontFamily: FONT, fontSize: 16, fontWeight: 700,
-                  color: "#fff", background: "#1E3A5F",
-                  border: "none", borderRadius: 8, padding: "11px 24px", cursor: "pointer",
-                }}>
-                  Assign Project Manager
-                </button>
-              </div>
+          {/* Mascot + CTA — centered */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 40 }}>
+            <img src="assets/rexi-mascot.png" alt="RExI" style={{ width: 120, height: "auto", marginBottom: 18 }} />
+            <p style={{ fontFamily: FONT, fontSize: 17, color: "#2E2D29", lineHeight: 1.65, margin: "0 0 22px", maxWidth: 560 }}>
+              I am here to guide you through the process. Want to continue on your own? Begin study activation to set up your tasks and I’ll manage your study behind the scenes.
+            </p>
+            <div style={{ display: "flex", gap: 14 }}>
+              <button onClick={onGuide} style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                fontFamily: FONT, fontSize: 16, fontWeight: 700,
+                color: "#B1040E", background: "#fff", border: "2px solid #B1040E",
+                borderRadius: 8, padding: "11px 22px", cursor: "pointer",
+              }}>
+                <I.sparkles size={18} /> Guide Me
+              </button>
+              <button onClick={onActivate} style={{
+                fontFamily: FONT, fontSize: 16, fontWeight: 700,
+                color: "#fff", background: "#1E3A5F",
+                border: "none", borderRadius: 8, padding: "11px 24px", cursor: "pointer",
+              }}>
+                Assign Project Manager
+              </button>
             </div>
           </div>
 
