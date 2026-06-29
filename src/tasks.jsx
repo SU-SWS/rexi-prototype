@@ -145,34 +145,188 @@ import ReactDOM from 'react-dom/client';
     );
   }
 
-  // ── At-risk hero ────────────────────────────────────────────────────
-  function AtRiskCard({ c }) {
+  // ── Chart constants ────────────────────────────────────────────────
+  const CHART_COLORS = {
+    "Not Started": "#F4A261",
+    "In Progress": "#FAD5A5",
+    "Late":        "#C53030",
+    "Completed":   "#279989",
+  };
+  const CHART_ORDER = ["Not Started", "In Progress", "Late", "Completed"];
+  const CHART_FONT  = "’Source Sans 3’, sans-serif";
+
+  function polarXY(cx, cy, r, deg) {
+    const rad = ((deg - 90) * Math.PI) / 180;
+    return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)];
+  }
+  function donutArc(cx, cy, inner, outer, startDeg, endDeg) {
+    const sweep = Math.min(endDeg - startDeg, 359.9);
+    const end = startDeg + sweep;
+    const [sx, sy] = polarXY(cx, cy, outer, startDeg);
+    const [ex, ey] = polarXY(cx, cy, outer, end);
+    const [ix, iy] = polarXY(cx, cy, inner, startDeg);
+    const [ox, oy] = polarXY(cx, cy, inner, end);
+    const lg = sweep > 180 ? 1 : 0;
+    return `M${sx},${sy} A${outer},${outer} 0 ${lg},1 ${ex},${ey} L${ox},${oy} A${inner},${inner} 0 ${lg},0 ${ix},${iy} Z`;
+  }
+
+  // ── Status donut chart ─────────────────────────────────────────────
+  function TaskStatusDonut({ tasks }) {
+    const counts = { "Not Started": 0, "In Progress": 0, "Late": 0, "Completed": 0 };
+    tasks.forEach(t => { if (counts[t.status] !== undefined) counts[t.status]++; });
+    const total = tasks.length || 1;
+    const remaining = tasks.length - counts["Completed"];
+    const CX = 95, CY = 95, OUTER = 78, INNER = 52, GAP = 2;
+    let angle = 0;
+    const slices = CHART_ORDER.reduce((acc, s) => {
+      if (!counts[s]) return acc;
+      const sweep = (counts[s] / total) * 360;
+      acc.push({ s, start: angle + GAP / 2, end: angle + sweep - GAP / 2 });
+      angle += sweep;
+      return acc;
+    }, []);
     return (
-      <div style={{ flex: 1, minWidth: 0, background: "#fff", border: "1px solid #F2C4C7", borderRadius: 8, padding: "13px 15px", display: "flex", flexDirection: "column" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-          <span style={{ fontFamily: FONT, fontSize: 14, fontWeight: 700, color: "#C8102E" }}>At Risk</span>
-          <span style={{ color: "#76746F" }}><I.comment size={17} /></span>
-        </div>
-        <div style={{ fontFamily: SERIF, fontSize: 21, color: "#0A0A0A", lineHeight: 1.15, marginBottom: 12, minHeight: 48, overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{c.title}</div>
-        <div style={{ fontFamily: FONT, fontSize: 14.5, fontWeight: 700, color: "#2E2D29", marginBottom: 10 }}>{c.dueType}: {fmtDate(c.date)}</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ color: "#9aa3ab" }}><I.user size={18} /></span>
-          <span style={{ fontFamily: FONT, fontSize: 14, color: "#53565A" }}>{c.assignee}</span>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <svg width={190} height={190} viewBox="0 0 190 190">
+          {!tasks.length ? (
+            <circle cx={CX} cy={CY} r={65} fill="none" stroke="#EAEAEA" strokeWidth={26} />
+          ) : slices.map(sl => (
+            <path key={sl.s} d={donutArc(CX, CY, INNER, OUTER, sl.start, sl.end)} fill={CHART_COLORS[sl.s]} />
+          ))}
+          <text x={CX} y={CY - 4} textAnchor="middle" style={{ fontFamily: CHART_FONT, fontSize: 28, fontWeight: 700 }} fill="#2E2D29">{remaining}</text>
+          <text x={CX} y={CY + 18} textAnchor="middle" style={{ fontFamily: CHART_FONT, fontSize: 13 }} fill="#6D6C69">Tasks left</text>
+        </svg>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5px 14px" }}>
+          {CHART_ORDER.map(s => (
+            <div key={s} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: CHART_COLORS[s], flexShrink: 0 }} />
+              <span style={{ fontFamily: CHART_FONT, fontSize: 12, color: "#6D6C69" }}>{s}</span>
+            </div>
+          ))}
         </div>
       </div>
     );
   }
 
-  function Hero() {
+  // ── Members stacked bar chart ──────────────────────────────────────
+  function MembersBarChart({ tasks }) {
+    const dataMap = {};
+    tasks.forEach(t => {
+      const a = t.assignee || "Unassigned";
+      if (!dataMap[a]) dataMap[a] = { "Not Started": 0, "In Progress": 0, "Late": 0, "Completed": 0 };
+      if (dataMap[a][t.status] !== undefined) dataMap[a][t.status]++;
+    });
+    const rows = Object.entries(dataMap)
+      .map(([name, counts]) => ({ name, counts, total: CHART_ORDER.reduce((s, k) => s + counts[k], 0) }))
+      .filter(r => r.total > 0)
+      .sort((a, b) => b.total - a.total);
+    if (!rows.length) return null;
+    const maxTotal = Math.max(...rows.map(r => r.total));
+    const chartMax = Math.max(Math.ceil(maxTotal / 2) * 2, 2);
+    const ticks = Array.from({ length: 4 }, (_, i) => Math.round((i * chartMax) / 3));
+    const LW = 110, ROW_H = 26, ROW_GAP = 18, AX_H = 26, W = 600, BW = W - LW;
+    const H = rows.length * (ROW_H + ROW_GAP) + AX_H;
     return (
-      <div style={{ background: "#fff", border: "1px solid #DCE3E9", borderRadius: 16, padding: "30px 40px", display: "flex", alignItems: "center", gap: 36, boxShadow: "0 2px 10px rgba(10,90,160,0.05)" }}>
-        <img src="assets/rexi-mascot.png" alt="Central Services" style={{ width: 150, height: "auto", flexShrink: 0 }} />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <h3 style={{ fontFamily: SERIF, fontSize: 30, color: "#0A0A0A", margin: "0 0 4px" }}>It’s never too late to start.</h3>
-          <p style={{ fontFamily: FONT, fontSize: 20, color: "#2E2D29", margin: "0 0 20px", lineHeight: 1.35 }}>Here are your top three tasks that are at risk — you should do them today.</p>
-          <div style={{ display: "flex", gap: 16 }}>
-            {ATRISK_TOP.map((c, i) => <AtRiskCard key={i} c={c} />)}
+      <div>
+        <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ overflow: "visible", display: "block" }}>
+          {ticks.map((v, i) => {
+            const x = LW + (v / chartMax) * BW;
+            return (
+              <g key={i}>
+                <line x1={x} y1={0} x2={x} y2={H - AX_H} stroke="#EAEAEA" strokeWidth={0.5} />
+                <text x={x} y={H - 6} textAnchor="middle" style={{ fontFamily: CHART_FONT, fontSize: 12 }} fill="#6D6C69">{v}</text>
+              </g>
+            );
+          })}
+          {rows.map((row, ri) => {
+            const y = ri * (ROW_H + ROW_GAP);
+            const segs = [];
+            let bx = LW;
+            CHART_ORDER.forEach(s => {
+              if (!row.counts[s]) return;
+              const w = Math.max(2, (row.counts[s] / chartMax) * BW);
+              segs.push({ s, x: bx, w });
+              bx += w;
+            });
+            const parts = row.name.split(" ");
+            const midY = y + ROW_H / 2 + 4;
+            return (
+              <g key={row.name}>
+                {parts.length === 1 ? (
+                  <text x={LW - 8} y={midY} textAnchor="end" style={{ fontFamily: CHART_FONT, fontSize: 13 }} fill="#2E2D29">{row.name}</text>
+                ) : parts.map((p, pi) => (
+                  <text key={pi} x={LW - 8} y={y + ROW_H / 2 + (pi - (parts.length - 1) / 2) * 15 + 4} textAnchor="end" style={{ fontFamily: CHART_FONT, fontSize: 13 }} fill="#2E2D29">{p}</text>
+                ))}
+                {segs.map(seg => (
+                  <rect key={seg.s} x={seg.x} y={y} width={seg.w} height={ROW_H} fill={CHART_COLORS[seg.s]} />
+                ))}
+              </g>
+            );
+          })}
+        </svg>
+        <div style={{ display: "flex", gap: 20, marginTop: 10, paddingLeft: 110 }}>
+          {CHART_ORDER.map(s => (
+            <div key={s} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: CHART_COLORS[s], flexShrink: 0 }} />
+              <span style={{ fontFamily: CHART_FONT, fontSize: 13, color: "#6D6C69" }}>{s}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Task board dashboard hero ──────────────────────────────────────
+  function TasksDashboard({ tasks, onGuide }) {
+    const [msg, setMsg] = React.useState("");
+    return (
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 16, marginBottom: 16 }}>
+          {/* Intro card */}
+          <div style={{ background: "#fff", border: "1px solid #EAEAEA", borderRadius: 12, padding: "28px 32px", boxShadow: "0 3px 6px rgba(0,0,0,0.08)" }}>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 20, marginBottom: 18 }}>
+              <img src="assets/rexi-mascot.png" alt="RExI" style={{ width: 110, height: "auto", flexShrink: 0 }} />
+              <h3 style={{ fontFamily: SERIF, fontSize: 30, color: "#2E2D29", margin: 0, fontWeight: 400, lineHeight: 1.3 }}>
+                Let’s explore your Task Board
+              </h3>
+            </div>
+            <p style={{ fontFamily: FONT, fontSize: 16, color: "#2E2D29", lineHeight: 1.6, margin: "0 0 16px" }}>
+              My name is RExI. You can ask me to do just about anything to get your study ready for activation. I’m here to make sure your studies are up-to-date and on track.
+            </p>
+            <p style={{ fontFamily: FONT, fontSize: 17, fontWeight: 700, color: "#2E2D29", margin: "0 0 18px", lineHeight: 1.5 }}>
+              I can help you organize and manage your tasks.<br />How can I help?
+            </p>
+            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+              <input
+                type="text"
+                value={msg}
+                onChange={e => setMsg(e.target.value)}
+                onKeyDown={e => { if (e.key === "Enter" && msg.trim()) { if (onGuide) onGuide(); setMsg(""); } }}
+                placeholder=""
+                style={{
+                  flex: 1, height: 48, border: "1.5px solid #C0C0BF", borderRadius: 999,
+                  padding: "0 20px", fontFamily: FONT, fontSize: 15, outline: "none",
+                  background: "#F8F8F8", color: "#2E2D29",
+                }}
+              />
+              <button onClick={() => onGuide && onGuide()} style={{
+                width: 48, height: 48, borderRadius: "50%", background: "#B1040E",
+                border: "none", cursor: "pointer", display: "grid", placeItems: "center", color: "#fff", flexShrink: 0,
+              }}>
+                <I.sparkles size={20} />
+              </button>
+            </div>
           </div>
+          {/* Status donut */}
+          <div style={{ background: "#fff", border: "1px solid #EAEAEA", borderRadius: 12, padding: "22px 24px", boxShadow: "0 3px 6px rgba(0,0,0,0.08)" }}>
+            <div style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: "#2E2D29", marginBottom: 10 }}>Status</div>
+            <TaskStatusDonut tasks={tasks} />
+          </div>
+        </div>
+        {/* Members bar chart */}
+        <div style={{ background: "#fff", border: "1px solid #EAEAEA", borderRadius: 12, padding: "22px 28px", boxShadow: "0 3px 6px rgba(0,0,0,0.08)" }}>
+          <div style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: "#2E2D29", marginBottom: 14 }}>Members</div>
+          <MembersBarChart tasks={tasks} />
         </div>
       </div>
     );
@@ -667,9 +821,9 @@ import ReactDOM from 'react-dom/client';
     return (
       <div style={{ height: "100%", overflowY: "auto", background: "#fff" }}>
         <div style={{ padding: "34px 48px 56px", maxWidth: 1320 }}>
-          <h2 style={{ fontFamily: SERIF, fontSize: 38, color: "#0A0A0A", margin: "0 0 24px" }}>Study Tasks</h2>
+          <h2 style={{ fontFamily: SERIF, fontSize: 37, fontWeight: 400, color: "#2E2D29", margin: "0 0 24px", letterSpacing: 1 }}>Study Tasks</h2>
 
-          <Hero />
+          <TasksDashboard tasks={filtered} onGuide={onGuide} />
 
           {/* toolbar */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, margin: "30px 0 18px", flexWrap: "wrap" }}>
