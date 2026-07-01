@@ -234,10 +234,11 @@ const NOTIFS = [
 
   // ── Docs page actions menu ────────────────────────────────────────────
   const DOC_ACTIONS = [
-    { id: "preview", label: "Preview",  icon: "eye" },
+    { id: "upload",   label: "Upload",   icon: "upload" },
+    { id: "preview",  label: "Preview",  icon: "eye" },
     { id: "download", label: "Download", icon: "download" },
-    { id: "share",   label: "Share",    icon: "share" },
-    { id: "delete",  label: "Delete",   icon: "trash", danger: true },
+    { id: "share",    label: "Share",    icon: "share" },
+    { id: "delete",   label: "Delete",   icon: "trash", danger: true },
   ];
 
   function DocActionsMenu({ onAction }) {
@@ -576,6 +577,7 @@ const NOTIFS = [
     const toggleExpand = (id, e) => { e.stopPropagation(); setExpanded(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; }); };
 
     const handleAction = (a, group, ver) => {
+      if (a.id === "upload") { setSelected({ group, ver }); return; }
       if (a.id === "delete") {
         setDocGroups(prev => prev.map(g => g.id !== group.id ? g : { ...g, versions: g.versions.filter(v => v.ver !== ver.ver) }).filter(g => g.versions.length > 0));
         flash("Deleted " + ver.ver + " of " + group.type);
