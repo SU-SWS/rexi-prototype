@@ -47,15 +47,29 @@ import ReactDOM from 'react-dom/client';
   };
 
   // ── Static document register (Documents page) ─────────────────────
+  // Each entry is a document group; versions[0] is the latest.
   const STUDY_DOCS = [
-    { type: "Protocol", desc: "KEYNOTE-A18 protocol, v4.0 (amendment 3)", received: "Apr 2, 2026", expires: "—", by: "Dean Amoroso", comment: "Supersedes v3.2" },
-    { type: "Informed Consent", desc: "Main study ICF — English, v4.0", received: "Apr 2, 2026", expires: "Apr 1, 2027", by: "Dean Amoroso", comment: "IRB-stamped" },
-    { type: "IRB Approval", desc: "Initial approval letter — IRB-2026-0142", received: "Apr 9, 2026", expires: "Apr 8, 2027", by: "Sofia Reyes", comment: "" },
-    { type: "Investigator Brochure", desc: "Pembrolizumab IB, edition 18", received: "Mar 28, 2026", expires: "Mar 27, 2027", by: "Dean Amoroso", comment: "" },
-    { type: "Lab Manual", desc: "Central laboratory manual, v2.1", received: "Apr 5, 2026", expires: "—", by: "Marcus Lee", comment: "Kit ordering, p.12" },
-    { type: "Pharmacy Manual", desc: "Investigational product handling guide", received: "Apr 5, 2026", expires: "—", by: "Priya Natarajan", comment: "" },
-    { type: "Monitoring Plan", desc: "Sponsor monitoring & SDV plan", received: "Apr 11, 2026", expires: "—", by: "Dean Amoroso", comment: "Risk-based" },
-    { type: "Delegation Log", desc: "Site delegation of authority log", received: "Apr 12, 2026", expires: "—", by: "Sofia Reyes", comment: "" },
+    { id: 1, type: "Research Manual", versions: [
+      { ver: "V.5", desc: "KEYNOTE-A18 research manual, edition 5", versionDate: "May 15, 2026", dateAttached: "May 15, 2026", by: "Dean Amoroso", comment: "Lorem ipsum dolor sit amet consectetur." },
+      { ver: "V.4", desc: "KEYNOTE-A18 research manual, edition 4", versionDate: "May 8, 2026",  dateAttached: "May 8, 2026",  by: "Dean Amoroso", comment: "Lorem ipsum dolor sit amet consectetur." },
+      { ver: "V.3", desc: "KEYNOTE-A18 research manual, edition 3", versionDate: "Apr 24, 2026", dateAttached: "Apr 24, 2026", by: "Dean Amoroso", comment: "" },
+      { ver: "V.2", desc: "KEYNOTE-A18 research manual, edition 2", versionDate: "Apr 10, 2026", dateAttached: "Apr 10, 2026", by: "Sofia Reyes",  comment: "" },
+      { ver: "V.1", desc: "KEYNOTE-A18 research manual, edition 1", versionDate: "Apr 2, 2026",  dateAttached: "Apr 2, 2026",  by: "Marcus Lee",   comment: "Lorem ipsum dolor sit amet consectetur." },
+    ]},
+    { id: 2, type: "Research Protocol", versions: [
+      { ver: "v.2", desc: "KEYNOTE-A18 protocol, v2.0 (amendment 1)", versionDate: "May 15, 2026", dateAttached: "May 15, 2026", by: "Dean Amoroso", comment: "Lorem ipsum dolor sit amet consectetur." },
+      { ver: "v.1", desc: "KEYNOTE-A18 protocol, v1.0", versionDate: "Apr 2, 2026", dateAttached: "Apr 2, 2026", by: "Dean Amoroso", comment: "" },
+    ]},
+    { id: 3, type: "IRB Approval", versions: [
+      { ver: "v.3", desc: "IRB approval letter — amendment 3, IRB-2026-0142", versionDate: "May 15, 2026", dateAttached: "May 15, 2026", by: "Dean Amoroso", comment: "Lorem ipsum dolor sit amet consectetur." },
+      { ver: "v.2", desc: "IRB approval letter — amendment 2", versionDate: "Apr 22, 2026", dateAttached: "Apr 22, 2026", by: "Sofia Reyes",  comment: "" },
+      { ver: "v.1", desc: "IRB approval letter — initial", versionDate: "Apr 9, 2026", dateAttached: "Apr 9, 2026", by: "Sofia Reyes", comment: "" },
+    ]},
+    { id: 4, type: "Informed Consent", versions: [
+      { ver: "v.10", desc: "Main study ICF — English, v10.0", versionDate: "May 15, 2026", dateAttached: "May 15, 2026", by: "Dean Amoroso", comment: "Lorem ipsum dolor sit amet consectetur." },
+      { ver: "v.9",  desc: "Main study ICF — English, v9.0",  versionDate: "May 1, 2026",  dateAttached: "May 1, 2026",  by: "Dean Amoroso", comment: "" },
+      { ver: "v.8",  desc: "Main study ICF — English, v8.0",  versionDate: "Apr 15, 2026", dateAttached: "Apr 15, 2026", by: "Priya Natarajan", comment: "" },
+    ]},
   ];
 
   const DOC_FILTERS = ["Document type", "Received by", "Expiration date", "Received date", "Last corrected", "Show deleted"];

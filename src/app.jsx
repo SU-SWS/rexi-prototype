@@ -115,7 +115,7 @@ import ReactDOM from 'react-dom/client';
     } else if (screen === "overview") {
       body = <OverviewPage onGuide={openGuide} onActivate={() => setScreen("review")} onEditTeam={() => setScreen("team")} />;
     } else if (screen === "documents") {
-      body = <DocumentsPage />;
+      body = <DocumentsPage onGuide={openGuide} />;
     } else if (screen === "tasks") {
       body = <TasksPage onGuide={openGuide} />;
     } else if (screen === "adminServices") {
